@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;
 import java.util.List;
+import javax.persistence.Query;
 
 @Repository
 public class UserDaoImp implements UserDao {
@@ -24,6 +25,15 @@ public class UserDaoImp implements UserDao {
    public List<User> listUsers() {
       TypedQuery<User> query=sessionFactory.getCurrentSession().createQuery("from User");
       return query.getResultList();
+   }
+   @Override
+   @SuppressWarnings("unchecked")
+   public User getUserByCar(String carModel, int carSeries) {
+      TypedQuery<User> query = sessionFactory.getCurrentSession().createQuery(
+              "select a from User a join Car b on a.car = b.id where b.model = :model and b.series = :series");
+      query.setParameter("model", carModel);
+      query.setParameter("series", carSeries);
+      return query.getSingleResult();
    }
 
 }
